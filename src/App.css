@@ -1,0 +1,202 @@
+
+#root {
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 32px 18px 56px;
+  background:
+    radial-gradient(ellipse at 15% 10%, #253568 0, transparent 38%),
+    radial-gradient(ellipse at 90% 85%, #39205d 0, transparent 35%),
+    #0b1020;
+  color: #f5f7ff;
+}
+
+.topbar {
+  max-width: 720px;
+  margin: 0 auto 38px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-icon,
+.logo {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #7c5cff, #b05cff);
+  font-size: 27px;
+}
+
+.topbar h2 {
+  font-size: 18px;
+  margin: 0 0 5px;
+  letter-spacing: 1px;
+}
+
+.topbar p {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #a7b0d0;
+  margin: 0;
+}
+
+.feedback-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 38px;
+  border: 1px solid #303957;
+  border-radius: 24px;
+  background: rgba(20, 27, 49, 0.94);
+  box-shadow: 0 24px 80px #0005;
+}
+
+.eyebrow {
+  color: #b5a3ff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.feedback-card h1 {
+  font-size: clamp(30px, 5vw, 43px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  margin: 14px 0;
+}
+
+.intro,
+.privacy-note {
+  color: #aeb8d2;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+form {
+  margin-top: 30px;
+}
+
+label {
+  display: block;
+  margin: 23px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #36405d;
+  border-radius: 10px;
+  outline: none;
+  background: #11182b;
+  color: #f5f7ff;
+  font: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #9a83ff;
+  box-shadow: 0 0 0 3px #9a83ff20;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #78839f;
+}
+
+.stars {
+  display: flex;
+  gap: 8px;
+}
+
+.star {
+  border: 1px solid #36405d;
+  background: #11182b;
+  color: #78839f;
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.star.active {
+  color: #ffd166;
+  border-color: #8069e9;
+  background: #342c57;
+}
+
+.rating-hint {
+  font-size: 12px;
+  color: #aeb8d2;
+}
+
+.submit-btn,
+.success-card button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 15px;
+  border: none;
+  border-radius: 11px;
+  background: linear-gradient(100deg, #7557f7, #a353ed);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit-btn span {
+  margin-left: 8px;
+}
+
+.submit-btn:hover,
+.success-card button:hover {
+  filter: brightness(1.12);
+}
+
+.privacy-note {
+  margin: 24px 0 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+.success-card {
+  margin-top: 70px;
+  text-align: center;
+}
+
+.success-card .logo {
+  margin: 0 auto 24px;
+}
+
+.success-card p {
+  color: #aeb8d2;
+  line-height: 1.7;
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 22px 13px 35px;
+  }
+
+  .feedback-card {
+    padding: 24px 19px;
+    border-radius: 18px;
+  }
+
+  .topbar {
+    margin-bottom: 25px;
+  }
+
+  .star {
+    flex: 1;
+  }
+}
