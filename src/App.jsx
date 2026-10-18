@@ -2,6 +2,10 @@
 import { useState } from 'react';
 import './App.css';
 
+
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+
 function App() {
   const [name, setName] = useState('');
   const [branch, setBranch] = useState('');
@@ -23,8 +27,8 @@ function App() {
     setSubmitting(true);
 
     try {
-      const response = await fetch(
-        'http://localhost:5000/api/feedback',
+      const response = await fetch
+        fetch(`${API}/api/feedback`, 
         {
           method: 'POST',
           headers: {
