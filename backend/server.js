@@ -6,19 +6,34 @@ const { google } = require('googleapis');
 const path = require('path');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g. mobile, curl, server-to-server)
+    if (!origin) return callback(null, true);
+
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    const isAllowedFrontend = process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL;
+
+    if (isLocalhost || isAllowedFrontend || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Blocked by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
 }));
 
 app.use(express.json({ limit: '20kb' }));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'ai-summit-secret-key-123',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -185,7 +200,7 @@ app.post('/api/feedback', async (req, res) => {
       !allowedBranches.includes(branch) ||
       !Number.isInteger(numericRating) ||
       numericRating < 1 ||
-      numericRating > 5 ||
+      numericRating > 10 ||
       typeof suggestions !== 'string' ||
       suggestions.length > 2000
     ) {
