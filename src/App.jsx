@@ -3,13 +3,21 @@ import { useState } from 'react';
 import './App.css';
 
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = import.meta.env.VITE_API_URL || '';
 
+
+function getRatingDescriptor(val) {
+  if (val >= 10) return 'Outstanding! 🌟';
+  if (val >= 8) return 'Great! ✨';
+  if (val >= 6) return 'Good 👍';
+  if (val >= 4) return 'Average 😐';
+  return 'Needs Improvement ⚠️';
+}
 
 function App() {
   const [name, setName] = useState('');
   const [branch, setBranch] = useState('');
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(8);
   const [suggestions, setSuggestions] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -19,29 +27,26 @@ function App() {
     event.preventDefault();
     setError('');
 
-    if (rating === 0) {
-      setError('Please select an event rating.');
+    if (rating < 1 || rating > 10) {
+      setError('Please select an event rating between 1 and 10.');
       return;
     }
 
     setSubmitting(true);
 
     try {
-      const response = await fetch
-        fetch(`${API}/api/feedback`, 
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name,
-            branch,
-            rating,
-            suggestions,
-          }),
-        }
-      );
+      const response = await fetch(`${API}/api/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          branch,
+          rating,
+          suggestions,
+        }),
+      });
 
       const result = await response.json();
 
@@ -66,7 +71,7 @@ function App() {
   function resetForm() {
     setName('');
     setBranch('');
-    setRating(0);
+    setRating(8);
     setSuggestions('');
     setError('');
     setSubmitted(false);
@@ -136,30 +141,58 @@ function App() {
             <option value="Electrical">Electrical</option>
           </select>
 
-          <label>How would you rate the event?</label>
-          <div className="stars" role="group" aria-label="Event rating">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                className={star <= rating ? 'star active' : 'star'}
-                aria-label={`${star} stars`}
-                aria-pressed={rating === star}
-                onClick={() => {
-                  setRating(star);
-                  setError('');
-                }}
-              >
-                ★
-              </button>
-            ))}
+          <div className="rating-field-header">
+            <label htmlFor="rating-slider">
+              How would you rate the event? <span className="required-star">*</span>
+            </label>
+            <div className="rating-score-badge">
+              <span className="rating-score-num">{rating}</span>
+              <span className="rating-score-max">/ 10</span>
+            </div>
           </div>
 
-          <p className="rating-hint">
-            {rating === 0
-              ? 'Select a rating from 1 to 5'
-              : `${rating} out of 5 stars`}
-          </p>
+          <div className="slider-container">
+            <input
+              id="rating-slider"
+              type="range"
+              min="1"
+              max="10"
+              step="1"
+              value={rating}
+              style={{
+                '--slider-progress': `${((rating - 1) / 9) * 100}%`
+              }}
+              onChange={(event) => {
+                setRating(Number(event.target.value));
+                setError('');
+              }}
+              className="rating-slider"
+              aria-label="Rating from 1 to 10"
+            />
+
+            <div className="slider-ticks" role="group" aria-label="Rating ticks 1 to 10">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  className={num === rating ? 'tick-btn active' : 'tick-btn'}
+                  onClick={() => {
+                    setRating(num);
+                    setError('');
+                  }}
+                  aria-label={`Rate ${num} out of 10`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rating-meta">
+            <span className="rating-scale-label">1 (Poor)</span>
+            <span className="rating-descriptor">{getRatingDescriptor(rating)}</span>
+            <span className="rating-scale-label">10 (Excellent)</span>
+          </div>
 
           <label htmlFor="suggestions">Your suggestions</label>
           <textarea
